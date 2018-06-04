@@ -29,7 +29,7 @@ public class Spawn : MonoBehaviour
         timeLeft -= Time.deltaTime;
         if (timeLeft < 0){
             Spawning();
-            timeLeft = 0.1f;
+            timeLeft = 5f;
         }
     }
 
@@ -49,19 +49,43 @@ public class Spawn : MonoBehaviour
         }
         Vector2 collisionSize = GetComponent<SpriteRenderer>().sprite.bounds.size;
         GetComponent<BoxCollider2D>().size = collisionSize;
-        transform.position = new Vector3(Random.Range(-7.5f, 7.5f)*(Global_manager.zoom/100), Random.Range(-3.5f, 3.5f)*(Global_manager.zoom/100), -9);
+        transform.position = new Vector3(Random.Range(-7.5f, 7.5f)*(Global_manager.zoom/100f), Random.Range(-3.5f, 3.5f)*(Global_manager.zoom/100f), -9);
         Checkpoint.stage = 0;
         GetComponent<ParticleSystem>().Play();
         
         //Bug : comportement bizarre. object reference not set to an instance of an object
-        //Global_manager.ihm.SetTarget(transform.position);
+        if(Global_manager.generalParams.controller== GeneralParameters.Controller.Robot){
+            Global_manager.ihm.SetTarget(transform.position);
+        }
+        
     }
 
     public void OnCollisionEnter2D(Collision2D collision){
         
         if (collision.gameObject.tag == "cursor"){
             chooseForm = Random.Range(1,4);
-            timeLeft = 30.0f;
+
+            switch (Global_manager.generalParams.Difficulty)
+            {
+                case GeneralParameters.Difficulties.Easy:
+                    timeLeft = 30.0f;
+                    break;
+                case GeneralParameters.Difficulties.Normal:
+                    timeLeft = 25.0f;
+                    break;
+                case GeneralParameters.Difficulties.Hard:
+                    timeLeft = 20.0f;
+                    break;
+                case GeneralParameters.Difficulties.Expert:
+                    timeLeft = 15.0f;
+                    break;
+                default:
+                    Debug.Log("Difficulty badly set");
+                    timeLeft = 30.0f;
+                    break;
+            }
+            Debug.Log(timeLeft);
+            
             switch (chooseForm){
                 case 1:
                     square.transform.position = transform.position;

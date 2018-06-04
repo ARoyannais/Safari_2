@@ -16,11 +16,11 @@ public class Global_manager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        ihm = new IhmCommunicator();
+        generalParams = new GeneralParameters();
         generalParams = GetComponent<GeneralParameters>();
-        if (generalParams.ConfigurationIsLoaded){
-            difficulty = GetComponent<GeneralParameters>().Difficulty;
-            zoom = GetComponent<GeneralParameters>().Zoom;
-        }
+        difficulty = GetComponent<GeneralParameters>().Difficulty;
+        zoom = GetComponent<GeneralParameters>().Zoom;
         score = 0;
     }
 	
